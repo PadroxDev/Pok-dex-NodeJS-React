@@ -78,7 +78,7 @@ app.get("/pokedex/list", function (req, res) {
   /*.limit(50) // pourrait permettre de limiter le nombre de résultats */
   .toArray(function (err, result) {
     if (err) {
-      res.status(400).send("Error fetching pokemon!");
+      res.status(400).send("Error fetching pokedex!");
     } else {
       res.json(result);
     }
@@ -91,30 +91,74 @@ app.post('/pokedex/insert', jsonParser, (req, res) => {
   const dbConnect = dbo.getDb();
 
   dbConnect
-    .collection("pokemon")
+    .collection("pokedex")
     .insertOne({ ...body })
   res.json(body);
 });
 
-app.post('/pokemon/update', jsonParser, (req, res) => {
-const body = req.body;
-console.log('Got body:', body);
-const dbConnect = dbo.getDb();
-
-dbConnect
-  .collection("pokemon")
-  .updateOne( { name:body.name }, { $set: { ...body.updated }}, { upsert: true });
-
-res.json(body);
-});
-
-app.delete('/pokemon/delete_by_name', jsonParser, (req, res) => {
+app.delete('/pokedex/delete_by_name', jsonParser, (req, res) => {
 const body = req.body; // Filter
 console.log('Got body', body);
 const dbConnect = dbo.getDb();
 
 dbConnect
-  .collection("pokemon")
+  .collection("pokedex")
+  .deleteOne( { name:body.name });
+
+res.json(body);
+});
+
+/* TYPES */
+
+app.get("/types/list", function (req, res) {
+  const dbConnect = dbo.getDb();
+
+  dbConnect.collection("type").renameCollection("types");
+
+  dbConnect
+    .collection("types")
+    .find({})
+    // permet de filtrer les résultats
+    /*.limit(50) // pourrait permettre de limiter le nombre de résultats */
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(400).send("Error fetching types!");
+      } else {
+        res.json(result);
+      }
+    });
+});
+
+app.post('/types/insert', jsonParser, (req, res) => {
+  const body = req.body;
+  console.log('Got body:', body);
+  const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection("types")
+    .insertOne({ ...body })
+  res.json(body);
+});
+
+app.post('/types/update', jsonParser, (req, res) => {
+const body = req.body;
+console.log('Got body:', body);
+const dbConnect = dbo.getDb();
+
+dbConnect
+  .collection("types")
+  .updateOne( { name:body.name }, { $set: { ...body.updated }}, { upsert: true });
+
+res.json(body);
+});
+
+app.delete('/types/delete_by_name', jsonParser, (req, res) => {
+const body = req.body; // Filter
+console.log('Got body', body);
+const dbConnect = dbo.getDb();
+
+dbConnect
+  .collection("types")
   .deleteOne( { name:body.name });
 
 res.json(body);
