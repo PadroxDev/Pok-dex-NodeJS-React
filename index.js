@@ -1,6 +1,8 @@
 const express = require("express");
 const dbo = require("./db/db");
+var cors = require('cors');
 const app = express();
+app.use(cors());
 const port = 4444;
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
@@ -112,8 +114,6 @@ res.json(body);
 
 app.get("/types/list", function (req, res) {
   const dbConnect = dbo.getDb();
-
-  dbConnect.collection("type").renameCollection("types");
 
   dbConnect
     .collection("types")
