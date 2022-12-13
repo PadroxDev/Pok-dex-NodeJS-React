@@ -35,7 +35,6 @@ app.get("/pokemon/list", function (req, res) {
 
   app.post('/pokemon/insert', jsonParser, (req, res) => {
     const body = req.body;
-    console.log('Got body:', body);
     const dbConnect = dbo.getDb();
 
     dbConnect
@@ -46,7 +45,6 @@ app.get("/pokemon/list", function (req, res) {
 
 app.post('/pokemon/update', jsonParser, (req, res) => {
   const body = req.body;
-  console.log('Got body:', body);
   const dbConnect = dbo.getDb();
 
   dbConnect
@@ -58,7 +56,6 @@ app.post('/pokemon/update', jsonParser, (req, res) => {
 
 app.delete('/pokemon/delete_by_name', jsonParser, (req, res) => {
   const body = req.body; // Filter
-  console.log('Got body', body);
   const dbConnect = dbo.getDb();
 
   dbConnect
@@ -89,7 +86,6 @@ app.get("/pokedex/list", function (req, res) {
 
 app.post('/pokedex/insert', jsonParser, (req, res) => {
   const body = req.body;
-  console.log('Got body:', body);
   const dbConnect = dbo.getDb();
 
   dbConnect
@@ -100,7 +96,6 @@ app.post('/pokedex/insert', jsonParser, (req, res) => {
 
 app.delete('/pokedex/delete_by_name', jsonParser, (req, res) => {
 const body = req.body; // Filter
-console.log('Got body', body);
 const dbConnect = dbo.getDb();
 
 dbConnect
@@ -129,9 +124,23 @@ app.get("/types/list", function (req, res) {
     });
 });
 
+app.get("/types/query", function (req, res) {
+  const query = req.query;
+  const dbConnect = dbo.getDb();
+  dbConnect
+    .collection("types")
+    .find({...query})
+    .toArray(function (err, res) {
+      if (err) {
+        res.status(400).send("Error fetching type !" + query.name);
+      } else {
+        res.json(result);
+      }
+    })
+});
+
 app.post('/types/insert', jsonParser, (req, res) => {
   const body = req.body;
-  console.log('Got body:', body);
   const dbConnect = dbo.getDb();
 
   dbConnect
@@ -142,7 +151,6 @@ app.post('/types/insert', jsonParser, (req, res) => {
 
 app.post('/types/update', jsonParser, (req, res) => {
 const body = req.body;
-console.log('Got body:', body);
 const dbConnect = dbo.getDb();
 
 dbConnect
@@ -152,9 +160,8 @@ dbConnect
 res.json(body);
 });
 
-app.delete('/types/delete_by_name', jsonParser, (req, res) => {
-const body = req.body; // Filter
-console.log('Got body', body);
+app.delete('/types/delete_by_name?', jsonParser, (req, res) => {
+const body = req.body;
 const dbConnect = dbo.getDb();
 
 dbConnect
