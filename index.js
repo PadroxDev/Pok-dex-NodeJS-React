@@ -33,13 +33,15 @@ app.get("/pokemon/list", function (req, res) {
       });
 });
 
-app.get("/pokemon/query", function (req, res) {
+app.get('/pokemon/query', function (req, res) {
+  console.log(req.query);
+
   const dbConnect = dbo.getDb();
 
   dbConnect
     .collection("pokemon")
-    .find({...req.query})
-    .then((result) => res.json(result))
+    .findOne({...req.query})
+    .then(result => res.json(result))
     .catch((err) => console.log(err));
 })
 
