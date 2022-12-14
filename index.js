@@ -31,7 +31,17 @@ app.get("/pokemon/list", function (req, res) {
           res.json(result);
         }
       });
-  });
+});
+
+app.get("/pokemon/query", function (req, res) {
+  const dbConnect = dbo.getDb();
+
+  dbConnect
+    .collection("pokemon")
+    .find({...req.query})
+    .then((result) => res.json(result))
+    .catch((err) => console.log(err));
+})
 
   app.post('/pokemon/insert', jsonParser, (req, res) => {
     const body = req.body;
